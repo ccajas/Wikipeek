@@ -1,7 +1,7 @@
 # Wikipeek
 **A small but useful script that lets you preview a linked Wikipedia article**
 
-Install this Userscript in your browser (tested in FireFox and Chrome) and when you browse Wikipedia, a short preview will pop up when you hover
+Install this Userscript in your browser (tested in Firefox and Chrome) and when you browse Wikipedia, a short preview will pop up when you hover
 the cursor over links to other Wikipedia articles.
 
 I didn't find another Userscript that did just this, so I decided to make it.
