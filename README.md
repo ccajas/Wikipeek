@@ -6,4 +6,4 @@ the cursor over links to other Wikipedia articles.
 
 I didn't find another Userscript that did just this, so I decided to make it.
 
-Wikipeek is still an early work in progress. It doesn't work with all types of Wiki hyperlinks, and cannot yet display article previews on pages that are re-directs.
+Wikipeek is still an early work in progress. Improvements are still being made, and some bugs have to be fixed (for example, non-Wiki hyperlinks should be ignored). 
