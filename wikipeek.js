@@ -27,15 +27,15 @@ $(document).ready(function()
 ///
 
 function hoverFunc(link) 
-{    
-	var article = link.href;    
+{
+	var article = link.href;
 	article = article.substr(article.lastIndexOf("/") + 1);
 	
 	var content = loadArticle(article);
 
 	// Check if it's a redirect
 	if (link.className == "mw-redirect")
-	{   
+	{
 		var redirContent = $.parseHTML(content);
 		var redirLink = $(redirContent).find('a');
 		redirLink = redirLink[0].href;
@@ -56,7 +56,7 @@ function hoverFunc(link)
 
 
 function loadArticle(article)
-{   
+{
 	// Check if this is an anchor link or empty
 	if (article.indexOf("#") != -1 || article.indexOf("?") != -1 || article === "")
 		return null;
@@ -90,19 +90,6 @@ function loadArticle(article)
 		).html();
 	};
 })(jQuery);
-
-///
-/// Read GET vars from a URL
-///
-
-function getUrlVars(url) 
-{
-	var vars = {};
-	var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-		vars[key] = value;
-	});
-	return vars;
-}
 
 ///
 /// AJAX shorthand function
