@@ -28,21 +28,15 @@ $(document).ready(function()
 
 function hoverFunc(link) 
 {
-	var article = link.href;
-	article = article.substr(article.lastIndexOf("/") + 1);
-	
-	var content = loadArticle(article);
+	var content = loadArticle(link.href);
 
 	// Check if it's a redirect
 	if (link.className == "mw-redirect")
 	{
 		var redirContent = $.parseHTML(content);
 		var redirLink = $(redirContent).find('a');
-		redirLink = redirLink[0].href;
-	
-		var redirArticle = redirLink.substr(redirLink.lastIndexOf("/") + 1);
 		
-		content = loadArticle(redirArticle);  
+		content = loadArticle(redirLink[0].href);  
 	}
 	
 	// Show toolTip with article preview
@@ -57,6 +51,9 @@ function hoverFunc(link)
 
 function loadArticle(article)
 {
+	// Article URL slug
+	article = article.substr(article.lastIndexOf("/") + 1);
+
 	// Check if this is an anchor link or empty
 	if (article.indexOf("#") != -1 || article.indexOf("?") != -1 || article === "")
 		return null;
