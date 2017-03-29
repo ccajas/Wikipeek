@@ -28,10 +28,8 @@ $(document).ready(function()
 
 function hoverFunc(link) 
 {    
-	console.log(link.href);
 	var article = link.href;    
 	article = article.substr(article.lastIndexOf("/") + 1);
-	console.log('article: '+ article);
 	
 	var content = loadArticle(article);
 
@@ -60,7 +58,7 @@ function hoverFunc(link)
 function loadArticle(article)
 {   
 	// Check if this is an anchor link or empty
-	if (article.indexOf("#") != -1 || article === "")
+	if (article.indexOf("#") != -1 || article.indexOf("?") != -1 || article === "")
 		return null;
 	
 	// URL for MediaWiki API
@@ -78,7 +76,6 @@ function loadArticle(article)
 		}
 	}
 
-	console.log(pageID);
 	return pageID.revisions[0]['*'];
 }
 
