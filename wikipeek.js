@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WikiPeek
 // @namespace    http://your.homepage/
-// @version      0.15
+// @version      0.16
 // @description  Preview Wikipedia article by hovering over its link
 // @author       C.Cajas
 // @match        en.wikipedia.org/wiki/*
@@ -11,15 +11,15 @@
 
 $(document).ready(function()
 {
-    $('body').css("background-color","#aabbcc");
-    $('#mw-content-text a').hover(
-        function() {
-            hoverFunc(this);
-        },
-        function() {
-            hoverOut();
-        }
-    );
+	$('body').css("background-color","#aabbcc");
+	$('#mw-content-text a').hover(
+		function() {
+			hoverFunc(this);
+		},
+		function() {
+			hoverOut();
+		}
+	);
 });
 
 ///
@@ -28,71 +28,58 @@ $(document).ready(function()
 
 function hoverFunc(link) 
 {    
-    console.log(link.href);
-    var article = link.href;
+	console.log(link.href);
+	var article = link.href;    
+	article = article.substr(article.lastIndexOf("/") + 1);
+	console.log('article: '+ article);
+	
+	var content = loadArticle(article);
 
-    // Load article from API
-    article = article.substr(article.lastIndexOf("/") + 1);
-    console.log(article);
-    
-    // Check if this is an anchor link
-    if (article.indexOf("#") != -1)
-        return;
-    
-    // Check if it's an empty string
-    if (article == "")
-        return;
-    
-    // URL for MediaWiki API
-    var queryURL = ajaxFunc("https://en.wikipedia.org/w/api.php?action=query&titles="+ 
-                        article +"&prop=revisions&rvparse=1&rvprop=content&rvsection=0&format=json");
+	// Check if it's a redirect
+	if (link.className == "mw-redirect")
+	{   
+		var redirContent = $.parseHTML(content);
+		var redirLink = $(redirContent).find('a');
+		redirLink = redirLink[0].href;
+	
+		var redirArticle = redirLink.substr(redirLink.lastIndexOf("/") + 1);
+		
+		content = loadArticle(redirArticle);  
+	}
+	
+	// Show toolTip with article preview
+	if (content)
+		showToolTip(content);
+}
 
-    var jsonObj = queryURL.query.pages;
-    var pageID;
+///
+/// Load article object from the article's name
+///
 
-    // Get property key name of page ID
-    for(var key in jsonObj) {
-        if(jsonObj.hasOwnProperty(key)) {
-            pageID = jsonObj[key];
-            break;
-        }
-    }
 
-    console.log(pageID);
-    var content = pageID.revisions[0]['*'];
+function loadArticle(article)
+{   
+	// Check if this is an anchor link or empty
+	if (article.indexOf("#") != -1 || article === "")
+		return null;
+	
+	// URL for MediaWiki API
+	var queryURL = ajaxFunc("https://en.wikipedia.org/w/api.php?action=query&titles="+ 
+						article +"&prop=revisions&rvparse=1&rvprop=content&rvsection=0&format=json");
 
-    // Check if it's a redirect
-    if (link.className == "mw-redirect")
-    {   
-        var redirContent = $.parseHTML(content);
-        var redirLink = $(redirContent).find('a');
-        console.dir(redirLink[0].href);
-    
-        var redirArticle = getUrlVars(redirLink[0].href)["title"];
-        console.log(redirArticle);
-          
-        // URL for MediaWiki API
-        var queryURL = ajaxFunc("https://en.wikipedia.org/w/api.php?action=query&titles="+ 
-                            redirArticle +"&prop=revisions&rvparse=1&rvprop=content&rvsection=0&format=json");
+	var jsonObj = queryURL.query.pages;
+	var pageID;
 
-        var jsonObj = queryURL.query.pages;
-        var redirPageID;
+	// Get property key name of page ID
+	for(var key in jsonObj) {
+		if(jsonObj.hasOwnProperty(key)) {
+			pageID = jsonObj[key];
+			break;
+		}
+	}
 
-        // Get property key name of page ID
-        for(var key in jsonObj) {
-            if(jsonObj.hasOwnProperty(key)) {
-                redirPageID = jsonObj[key];
-                break;
-            }
-        }
-
-        console.log("Redirect PageID:");
-        console.log(redirPageID);
-        content = redirPageID.revisions[0]['*'];      
-    }
-    
-    // Show toolTip with article preview
-    showToolTip(content);
+	console.log(pageID);
+	return pageID.revisions[0]['*'];
 }
 
 ///
@@ -100,11 +87,11 @@ function hoverFunc(link)
 ///
 
 (function($) {
-    $.strRemove = function(theTarget, theString) {
-        return $("<div/>").append(
-            $(theTarget, theString).remove().end()
-        ).html();
-    };
+	$.strRemove = function(theTarget, theString) {
+		return $("<div/>").append(
+			$(theTarget, theString).remove().end()
+		).html();
+	};
 })(jQuery);
 
 ///
@@ -113,11 +100,11 @@ function hoverFunc(link)
 
 function getUrlVars(url) 
 {
-    var vars = {};
-    var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-        vars[key] = value;
-    });
-    return vars;
+	var vars = {};
+	var parts = url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		vars[key] = value;
+	});
+	return vars;
 }
 
 ///
@@ -126,17 +113,17 @@ function getUrlVars(url)
 
 function ajaxFunc(url) 
 {
-    var result;
+	var result;
 
-    $.ajax({
-        datatype: "json",
-        url: url,
-        async: false,
-        success: function(data){
-            result = data;
-        }
-    });
-    return result;
+	$.ajax({
+		datatype: "json",
+		url: url,
+		async: false,
+		success: function(data){
+			result = data;
+		}
+	});
+	return result;
 }
 
 ///
@@ -145,26 +132,29 @@ function ajaxFunc(url)
 
 function showToolTip(content)
 {
-    var toolTip = $(this).attr('Tooltip');
-    
-    $('body')
-        .append('<div class="wpk-tooltip">'+ content +'</div>');
-    
-    $('.wpk-tooltip')
-        .hide()
-        .fadeIn(500)
-        .css({
-            'position' : 'absolute',
-            'z-index' : 100,
-            'font-size' : 12,
-            'line-height' : '1.4em',
-            'top' : (event.pageY + 10) + 'px',
-            'left' : '20%',
-            'width' : '40%',
-            'padding' : 5 + 'px',
-            'background-color' : '#eee',
-            'border' : '2px solid #aaa'
-        })
+	var toolTip = $(this).attr('Tooltip');
+	
+	$('body')
+		.append('<div class="wpk-tooltip">'+ content +'</div>');
+	
+	$('.wpk-tooltip')
+		.hide()
+		.fadeIn(500)
+		.css({
+			'position' : 'absolute',
+			'z-index' : 100,
+			'font-size' : 12,
+			'line-height' : '1.4em',
+			'top' : (event.pageY + 10) + 'px',
+			'left' : '20%',
+			'width' : '40%',
+			'padding' : 5 + 'px',
+			'background-color' : '#eee',
+			'border' : '2px solid #aaa',
+			'-webkit-box-shadow' : '0px 5px 4px 2px rgba(0,0,0,0.55)',
+			'-moz-box-shadow' : '0px 5px 4px 2px rgba(0,0,0,0.55)',
+			'box-shadow' : '0px 5px 4px 2px rgba(0,0,0,0.55)'
+		});
 }
 
 ///
@@ -173,5 +163,5 @@ function showToolTip(content)
 
 function hoverOut()
 {
-    $('.wpk-tooltip').remove();
+	$('.wpk-tooltip').remove();
 }
