@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WikiPeek
 // @namespace    http://your.homepage/
-// @version      0.16
+// @version      0.175
 // @description  Preview Wikipedia article by hovering over its link
 // @author       C.Cajas
 // @match        en.wikipedia.org/wiki/*
@@ -11,7 +11,6 @@
 
 $(document).ready(function()
 {
-	$('body').css("background-color","#aabbcc");
 	$('#mw-content-text a').hover(
 		function() {
 			hoverFunc(this);
