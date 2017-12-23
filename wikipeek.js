@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WikiPeek
 // @namespace    http://your.homepage/
-// @version      0.175
+// @version      0.2
 // @description  Preview Wikipedia article by hovering over its link
 // @author       C.Cajas
 // @match        en.wikipedia.org/wiki/*
@@ -125,7 +125,7 @@ function showToolTip(content)
 			'z-index' : 100,
 			'font-size' : 12,
 			'line-height' : '1.4em',
-			'top' : (event.pageY + 10) + 'px',
+			'left' : (event.pageX + 400 < $(window).width() ? event.pageX : $(window).width() - 450) + 'px',
 			'left' : '20%',
 			'width' : '40%',
 			'padding' : 5 + 'px',
