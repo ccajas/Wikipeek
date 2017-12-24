@@ -1,7 +1,7 @@
 # Wikipeek
 **A small but useful script that lets you preview a linked Wikipedia article**
 
-![Wikipeek screenshot](https://github.com/ccajas/Wikipeek/raw/master/screenshot.png "Wikipeek screenshot")
+[Wikipeek screenshot](https://github.com/ccajas/Wikipeek/raw/master/screenshot.png)
 
 Install this Userscript in your browser (tested in Firefox and Chrome) and when you browse Wikipedia, a short preview will pop up when you hover
 the cursor over links to other Wikipedia articles.
